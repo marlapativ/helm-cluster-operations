@@ -49,7 +49,7 @@ Set the certificate secret name
 {{- if .Values.certificate.secretName }}
 {{- printf "%s" .Values.certificate.secretName }}
 {{- else }}
-{{- printf "%s-certificate-secret" (include "helm-cluster-operations.fullname" .) }}
+{{- printf "%s-certificate-secret" (include "helm-cluster-operations.name" .) }}
 {{- end }}
 {{- end }}
 

@@ -15,7 +15,7 @@ spec:
         number: 443
         protocol: HTTPS
       tls:
-        credentialName: {{ include "helm-cluster-operations.certificate.secretName" .}}
+        credentialName: {{ include "helm-cluster-operations.certificate.secretName" . }}
         mode: SIMPLE
     - hosts:
       - '*'
