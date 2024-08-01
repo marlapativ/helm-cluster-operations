@@ -18,7 +18,7 @@ spec:
         credentialName: {{ include "helm-cluster-operations.certificate.secretName" . }}
         mode: SIMPLE
     - hosts:
-      - '*'
+      {{- required "certificate.dnsNames is required" .Values.certificate.dnsNames | toYaml | nindent 6 }}
       port:
         name: http
         number: 80
