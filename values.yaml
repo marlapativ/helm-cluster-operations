@@ -64,7 +64,8 @@ certmanager:
 
 certificate:
   # Set the dnsNames for the cert-manager Certificate.
-  dnsNames: []
+  dnsNames:
+  - localhost
 
   # Set the secretName for the cert-manager Certificate.
   secretName: 'ingress-certificate'
