@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "helm-cluster-operations.fullname" . }}-istio-servicemonitor
+  namespace: {{ include "helm-cluster-operations.monitoring.istio-namespace" . }}
+  labels: {{- include "helm-cluster-operations.labels" . | nindent 4 }}
+spec:
+  jobLabel: {{ include "helm-cluster-operations.fullname" . }}-envoy-servicestats
+  targetLabels: {{- .Values.istio.monitoring.service.targetLabels | toYaml | nindent 4 }}
+  selector:
+    matchExpressions:
+      - { key: istio, operator: In, values: [pilot] }
+  namespaceSelector:
+    {{- .Values.istio.monitoring.namespaceSelector | toYaml | nindent 4 }}
+  endpoints:
+    - port: http-monitoring
+      interval: 15s

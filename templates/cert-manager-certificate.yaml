@@ -1,0 +1,18 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "helm-cluster-operations.fullname" . }}-certmanager-certificate
+  namespace: {{ include "helm-cluster-operations.gateway.istio-namespace" . }}
+  labels: {{- include "helm-cluster-operations.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "helm-cluster-operations.certificate.secretName" .}}
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  dnsNames:
+  {{- required "certificate.dnsNames is required" .Values.certificate.dnsNames | toYaml | nindent 4 }}
+  commonName: {{ .Values.certificate.dnsNames | first }}
+  issuerRef:
+    name: {{ include "helm-cluster-operations.fullname" . }}-certmanager-clusterissuer
+    kind: ClusterIssuer

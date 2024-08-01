@@ -1,0 +1,10 @@
+{{- if contains "zerossl" .Values.certmanager.acmeserver }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "helm-cluster-operations.fullname" . }}-zerossl-secret
+  namespace: {{ include "helm-cluster-operations.certmanager.namespace" . }}
+  labels: {{- include "helm-cluster-operations.labels" . | nindent 4 }}
+data:
+  secret: {{ required "zero ssl hmac key required" .Values.certmanager.zerossl.key | b64enc }}
+{{ end }}

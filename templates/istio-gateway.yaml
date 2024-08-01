@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "helm-cluster-operations.fullname" . }}-istio-gateway
+  namespace: {{ include "helm-cluster-operations.gateway.istio-namespace" . }}
+  labels: {{- include "helm-cluster-operations.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- .Values.istio.gateway.selector | toYaml | nindent 4 }}
+  servers:
+    - hosts:
+      {{- required "certificate.dnsNames is required" .Values.certificate.dnsNames | toYaml | nindent 6 }}
+      port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      tls:
+        credentialName: {{ include "helm-cluster-operations.certificate.secretName" .}}
+        mode: SIMPLE
+    - hosts:
+      - '*'
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+      tls:
+        httpsRedirect: true
+    {{- with .Values.istio.gateway.servers }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
