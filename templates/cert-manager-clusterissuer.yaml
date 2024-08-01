@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ include "helm-cluster-operations.fullname" . }}-certmanager-clusterissuer
+  namespace: {{ include "helm-cluster-operations.certmanager.namespace" . }}
+  labels: {{- include "helm-cluster-operations.labels" . | nindent 4 }}
+spec:
+  acme:
+    server: {{ include "helm-cluster-operations.certmanager.acmeserver" . }}
+    email: {{ first .Values.certmanager.email }}
+    privateKeySecretRef:
+      name: {{ include "helm-cluster-operations.fullname" . }}-clusterissuer-secret
+    {{- if contains "zerossl" .Values.certmanager.acmeserver }}
+    externalAccountBinding:
+      keyID: {{ required "zero ssl keyid required" .Values.certmanager.zerossl.keyID }}
+      keySecretRef:
+        name: {{ include "helm-cluster-operations.fullname" . }}-zerossl-secret
+        key: secret
+    {{- end }}
+    solvers:
+      - dns01:
+          {{- toYaml .Values.certmanager.providers | nindent 10 }}

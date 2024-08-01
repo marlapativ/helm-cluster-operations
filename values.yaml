@@ -1,0 +1,70 @@
+istio:
+  # Set istio monitoring configuration.
+  monitoring:
+    # Set the namespace where the istio pod monitor, service monitor cr will be deployed.
+    namespace: ''
+
+    # Set the namespaceSelector to specify what namespaces are to be monitored.
+    namespaceSelector:
+      any: true
+
+  # Set the service monitor target labels for the istio monitoring.
+    service:
+      targetLabels:
+        - app
+
+  # Set the gateway configuration for the Istio Ingress Gateway.
+  gateway:
+    # Set the namespace where the istio gateway cr will be deployed.
+    namespace: ''
+
+    # Set the selector for pods to deploy the Istio Ingress Gateway.
+    selector:
+      istio: gateway
+
+    # Set the servers configuration for the Istio Ingress Gateway.
+    servers: []
+
+    # Set the virtualservice configuration for the Istio Ingress Gateway.
+    virtualservice:
+      hosts:
+        - '*'
+      http:
+        - name: 'grafana'
+          route:
+            - destination:
+                port:
+                  number: 3000
+                host: grafana.operations.svc.cluster.local
+
+certmanager:
+  # Set the namespace where the cert-manager will be deployed.
+  namespace: ''
+
+  # Set the email for the cert-manager ClusterIssuer.
+  email: []
+
+  # Set the acme server for the cert-manager ClusterIssuer. Defaults to Let's Encrypt
+  acmeserver: ''
+
+  # Set zerossl eab hmac key for the cert-manager ClusterIssuer.
+  zerossl:
+    keyID: ''
+    key: ''
+
+  # Set whether to use Let's Encrypt staging or production server.
+  # Defaults to staging server.
+  staging: true 
+
+  # Set the dns01 provider for the cert-manager ClusterIssuer.
+  providers:
+    route53:
+      region: us-east-1
+
+
+certificate:
+  # Set the dnsNames for the cert-manager Certificate.
+  dnsNames: []
+
+  # Set the secretName for the cert-manager Certificate.
+  secretName: 'ingress-certificate'

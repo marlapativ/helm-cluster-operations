@@ -1,0 +1,10 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "helm-cluster-operations.fullname" . }}-istio-virtualservice
+  namespace: {{ include "helm-cluster-operations.gateway.istio-namespace" . }}
+  labels: {{- include "helm-cluster-operations.labels" . | nindent 4 }}
+spec:
+  gateways:
+    - {{ include "helm-cluster-operations.fullname" . }}-istio-gateway
+  {{ toYaml .Values.istio.gateway.virtualservice | nindent 2 }}
