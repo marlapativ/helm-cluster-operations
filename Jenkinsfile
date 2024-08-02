@@ -3,6 +3,9 @@ pipeline {
         imageRegistry = "docker.io"
         imageRepo = "marlapativ"
         registryCredential = 'dockerhub'
+        istioImagesTag = "1.22.3"
+        istiodImageName = "pilot"
+        istioGatewayImageName = "proxyv2"
     }
     agent any
     stages {
@@ -28,6 +31,14 @@ pipeline {
 
         stage('setup docker') {
             steps {
+                sh '''
+                    if [ -n "$(docker buildx ls | grep multiarch)" ]; then
+                        docker buildx use multiarch
+                    else
+                        docker buildx create --name=multiarch --driver=docker-container --use --bootstrap 
+                    fi
+                '''
+
                 script {
                     withCredentials([usernamePassword(credentialsId: registryCredential, passwordVariable: 'password', usernameVariable: 'username')]) {
                         sh('docker login -u $username -p $password')
@@ -50,6 +61,36 @@ pipeline {
                         '''
                     }
                 }
+            }
+        }
+
+        stage('build and push istiod image') {
+            steps {
+                sh '''
+                    docker buildx build \
+                        --build-arg BASEIMAGETAG=$istioImagesTag \
+                        --platform linux/amd64,linux/arm64 \
+                        --builder multiarch \
+                        -t $imageRepo/$istiodImageName:latest \
+                        -t $imageRepo/$istiodImageName:$istioImagesTag \
+                        --push \
+                        .
+                '''
+            }
+        }
+
+        stage('build and push istio Gateway image') {
+            steps {
+                sh '''
+                    docker buildx build \
+                        --build-arg BASEIMAGETAG=$istioImagesTag \
+                        --platform linux/amd64,linux/arm64 \
+                        --builder multiarch \
+                        -t $imageRepo/$istioGatewayImageName:latest \
+                        -t $imageRepo/$istioGatewayImageName:$istioImagesTag \
+                        --push \
+                        .
+                '''
             }
         }
 

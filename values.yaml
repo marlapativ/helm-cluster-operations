@@ -69,3 +69,16 @@ certificate:
 
   # Set the secretName for the cert-manager Certificate.
   secretName: 'ingress-certificate'
+
+# Override the default values for the kiali-server
+kiali-server:
+  auth:
+    strategy: anonymous
+
+  deployment:
+    pod_labels:
+      sidecar.istio.io/inject: "false"
+
+  external_services:
+    tracing:
+      enabled: false
