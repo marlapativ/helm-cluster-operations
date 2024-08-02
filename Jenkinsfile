@@ -73,8 +73,9 @@ pipeline {
                         --builder multiarch \
                         -t $imageRepo/$istiodImageName:latest \
                         -t $imageRepo/$istiodImageName:$istioImagesTag \
+                        -f Dockerfile.istiod \
                         --push \
-                        Dockerfile.istiod
+                        .
                 '''
             }
         }
@@ -88,8 +89,9 @@ pipeline {
                         --builder multiarch \
                         -t $imageRepo/$istioGatewayImageName:latest \
                         -t $imageRepo/$istioGatewayImageName:$istioImagesTag \
+                        -f Dockerfile.istiogateway \
                         --push \
-                        Dockerfile.istiogateway
+                        .
                 '''
             }
         }
