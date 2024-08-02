@@ -74,7 +74,7 @@ pipeline {
                         -t $imageRepo/$istiodImageName:latest \
                         -t $imageRepo/$istiodImageName:$istioImagesTag \
                         --push \
-                        .
+                        Dockerfile.istiod
                 '''
             }
         }
@@ -89,7 +89,7 @@ pipeline {
                         -t $imageRepo/$istioGatewayImageName:latest \
                         -t $imageRepo/$istioGatewayImageName:$istioImagesTag \
                         --push \
-                        .
+                        Dockerfile.istiogateway
                 '''
             }
         }
