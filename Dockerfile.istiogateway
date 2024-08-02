@@ -1,0 +1,5 @@
+# NOTE: This Dockerfile is used to mirror the image for the istio charts
+#       Update the tag on Jenkinsfile to override the docker image tag
+
+ARG BASEIMAGETAG=1.22.3
+FROM istio/proxyv2:${BASEIMAGETAG}
