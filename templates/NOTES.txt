@@ -1,0 +1,10 @@
+Thank you for installing {{ .Chart.Name }}.
+The Helm chart has been successfully deployed.
+
+Uninstalling the Chart
+----------------------
+- To uninstall/delete the {{ .Release.Name }} deployment, use the following command:
+
+  helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+- This will remove all the Kubernetes components associated with the chart and delete the release.
